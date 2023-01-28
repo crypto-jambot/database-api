@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { verify } from "jsonwebtoken";
 import { SecretUtil } from "@crypto-jambot/secret-manager-utils";
-import { mySqlRoute } from "./sql";
+import { mongoRoute } from "./mongo";
+
 export const router = Router();
 const secretUtil = new SecretUtil();
 
@@ -28,4 +29,4 @@ router.use("/", async (req, res, next) => {
     });
 });
 
-router.use("/auth", mySqlRoute);
+router.use("/query", mongoRoute);
