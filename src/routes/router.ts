@@ -29,4 +29,4 @@ router.use("/", async (req, res, next) => {
     });
 });
 
-router.use("/query", mongoRoute);
+router.use("/publish", mongoRoute);
