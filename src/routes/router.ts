@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { verify } from "jsonwebtoken";
 import { SecretUtil } from "@crypto-jambot/secret-manager-utils";
-import { mongoRoute } from "./mongo";
+import { publishRouter } from "./publish";
+import { readRouter } from "./read";
 
 export const router = Router();
 const secretUtil = new SecretUtil();
@@ -28,5 +29,5 @@ router.use("/", async (req, res, next) => {
         message: "Missing Authorization Header or it is formatted incorrectly",
     });
 });
-
-router.use("/publish", mongoRoute);
+router.use("/publish", publishRouter);
+router.use("/read", readRouter);

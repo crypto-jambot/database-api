@@ -3,13 +3,13 @@ import "../utils/mongoConfig";
 import { pathModel } from "../models/Path";
 import { storage } from "../utils/mongoConfig";
 
-export const mongoRoute = Router();
+export const publishRouter = Router();
 type MongoBody = {
     bucket: string;
     fileName: string;
 };
 
-mongoRoute.post("/", async (req, res) => {
+publishRouter.post("/", async (req, res) => {
     const { fileName, bucket } = req.body as MongoBody;
     if (!fileName || !bucket) {
         res.status(400).json({
@@ -23,10 +23,6 @@ mongoRoute.post("/", async (req, res) => {
             .filter((line) => line !== "")
             .map((line) => JSON.parse(line));
         const paths = await pathModel.create(data);
-        // Will be used for finding paths greater than timestamp - 24 hours
-        // const path = await pathModel.findOne({
-        //     createdAt: { $gte: Date.now() - 24 * 60 * 60 * 1000 },
-        // });
         res.status(200).json({ message: paths.length });
     } catch (err: any) {
         const { name, message } = err;
