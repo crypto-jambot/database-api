@@ -22,6 +22,13 @@ const TokenPath = new Schema({
 
 const paths = new Schema(
     {
+        addresses: {
+            type: [String],
+            validate: {
+                validator: (v: any[]) => v && v.length > 0,
+                message: "Addresses is required",
+            },
+        },
         swapPath: {
             type: [SwapPath],
             validate: {
