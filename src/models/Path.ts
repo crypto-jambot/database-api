@@ -4,7 +4,6 @@ const SwapPath = new Schema({
     exchanges: {
         type: [
             {
-                name: { type: String, required: true },
                 fee: { type: Number, required: true },
                 pool: { type: String, required: true },
             },
@@ -12,12 +11,6 @@ const SwapPath = new Schema({
         required: true,
     },
     ordered: { type: Boolean, required: true },
-});
-const TokenPath = new Schema({
-    name: String,
-    symbol: String,
-    address: { type: String, required: true },
-    decimals: Number,
 });
 
 const paths = new Schema(
@@ -37,7 +30,7 @@ const paths = new Schema(
             },
         },
         tokenPath: {
-            type: [TokenPath],
+            type: [String],
             validate: {
                 validator: (v: any[]) => v && v.length > 0,
                 message: "Swap Path is required",
