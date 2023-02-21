@@ -40,4 +40,4 @@ const paths = new Schema(
     { strictQuery: false, timestamps: true }
 );
 
-export const pathModel = model("Path", paths);
+export const pathModel = model("backfill_paths", paths);

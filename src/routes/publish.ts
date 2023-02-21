@@ -2,6 +2,7 @@ import { Router } from "express";
 import "../utils/mongoConfig";
 import { pathModel } from "../models/Path";
 import { storage } from "../utils/mongoConfig";
+import { makeRequest } from "../utils/requestUtil";
 
 export const publishRouter = Router();
 type MongoBody = {
@@ -15,17 +16,15 @@ publishRouter.post("/", async (req, res) => {
         res.status(400).json({
             message: "fileName and bucket required in post body.",
         });
+        return;
     }
-    try {
+    await makeRequest(res, async () => {
         const data = (await storage.bucket(bucket).file(fileName).download())
             .toString()
             .split("\n")
             .filter((line) => line !== "")
             .map((line) => JSON.parse(line));
         const paths = await pathModel.create(data);
-        res.status(200).json({ message: paths.length });
-    } catch (err: any) {
-        const { name, message } = err;
-        res.status(400).json({ errorType: name, message });
-    }
+        return { responseCode: 201, data: paths.length };
+    });
 });
