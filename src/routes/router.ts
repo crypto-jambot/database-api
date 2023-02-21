@@ -2,7 +2,8 @@ import { Router } from "express";
 import { verify } from "jsonwebtoken";
 import { SecretUtil } from "@crypto-jambot/secret-manager-utils";
 import { publishRouter } from "./publish";
-import { readRouter } from "./read";
+import { renameRouter } from "./rename";
+import { deleteRouter } from "./delete";
 
 export const router = Router();
 const secretUtil = new SecretUtil();
@@ -30,4 +31,5 @@ router.use("/", async (req, res, next) => {
     });
 });
 router.use("/publish", publishRouter);
-router.use("/read", readRouter);
+router.use("/rename", renameRouter);
+router.use("/delete", deleteRouter);
