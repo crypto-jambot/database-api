@@ -1,6 +1,6 @@
 import { Router } from "express";
 import "../utils/mongoConfig";
-import { pathModel } from "../models/Path";
+import { treeListsModel } from "../models/Trees";
 import { storage } from "../utils/mongoConfig";
 import { makeRequest } from "../utils/requestUtil";
 
@@ -24,7 +24,7 @@ publishRouter.post("/", async (req, res) => {
             .split("\n")
             .filter((line) => line !== "")
             .map((line) => JSON.parse(line));
-        const paths = await pathModel.create(data);
-        return { responseCode: 201, data: paths.length };
+        const trees = await treeListsModel.create(data);
+        return { responseCode: 201, data: trees.length };
     });
 });
