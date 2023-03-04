@@ -1,22 +1,34 @@
-import { connect } from "mongoose";
+import { connect, Connection, connection } from "mongoose";
 import { SecretUtil } from "@crypto-jambot/secret-manager-utils";
-import { Storage } from "@google-cloud/storage";
 
 const util = new SecretUtil();
-export const storage = new Storage();
-util.getSecretString(process.env.SECRET as string)
-    .then((value) => {
-        connect(
-            `mongodb+srv://${process.env.DB_USER}:${value}@${process.env.CLUSTER_URL}/${process.env.DATABASE}?retryWrites=true&w=majority`,
-            {
-                authSource: "admin",
+
+export function confirmConnection() {
+    return new Promise<Connection>(async (resolve, reject) => {
+        try {
+            let mongoConnection = await connection;
+            if (mongoConnection.readyState === 0) {
+                mongoConnection = await connectDatabase();
             }
-        )
-            .then(() => {
-                console.log("Connected");
-            })
-            .catch((err) => console.error(err));
-    })
-    .catch((err) => {
-        console.log(err);
+            resolve(mongoConnection);
+        } catch (err) {
+            reject(err);
+        }
     });
+}
+
+function connectDatabase() {
+    return new Promise<Connection>(async (resolve, reject) => {
+        try {
+            const password = await util.getSecretString(
+                process.env.SECRET as string
+            );
+            const { connection: newConnection } = await connect(
+                `mongodb+srv://${process.env.DB_USER}:${password}@${process.env.CLUSTER_URL}/${process.env.DATABASE}?retryWrites=true&w=majority`
+            );
+            resolve(newConnection);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}

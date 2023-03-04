@@ -1,14 +1,18 @@
 import { Response } from "express";
+import { confirmConnection } from "./mongoConfig";
+import { Connection } from "mongoose";
 type RequestResponse = {
     responseCode: number;
     data: any;
 };
 export async function makeRequest(
     res: Response,
-    callback: () => Promise<RequestResponse>
+    callback: (connection: Connection) => Promise<RequestResponse>
 ) {
     try {
-        const { responseCode, data } = await callback();
+        const { responseCode, data } = await callback(
+            await confirmConnection()
+        );
         res.status(responseCode).json({ message: data });
     } catch (err: any) {
         const { name, message } = err;
