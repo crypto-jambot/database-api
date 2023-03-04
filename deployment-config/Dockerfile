@@ -4,7 +4,6 @@ FROM node:latest
 WORKDIR /usr/src/app
 
 ARG NPM_TOKEN
-ARG PORT
 ENV PORT=$PORT
 COPY . .
 
